@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       mes:
-        description: 'Mes a generar (ej: agosto)'
+        description: 'Mes (ej: agosto)'
         required: true
         default: 'agosto'
       anyo:
@@ -15,165 +15,32 @@ on:
         default: '2026'
 
 jobs:
-  generar-plan:
+  generar:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       issues: write
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Determinar mes y anyo
-        id: vars
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            MES="${{ github.event.inputs.mes }}"
-            ANYO="${{ github.event.inputs.anyo }}"
-          else
-            # Ultimo dia del mes: calcular mes siguiente
-            MES_NUM=$(date +%-m)
-            ANYO_ACT=$(date +%Y)
-            HOY=$(date +%d)
-            ULTIMO=$(cal $(date +%m) $(date +%Y) | awk 'NF{f=$NF}END{print f}')
-            if [ "$HOY" != "$ULTIMO" ]; then
-              echo "No es el ultimo dia del mes, saliendo."
-              echo "ejecutar=false" >> $GITHUB_OUTPUT
-              exit 0
-            fi
-            if [ "$MES_NUM" = "12" ]; then
-              MES_SIG=1
-              ANYO=$((ANYO_ACT + 1))
-            else
-              MES_SIG=$((MES_NUM + 1))
-              ANYO=$ANYO_ACT
-            fi
-            NOMBRES=("" "enero" "febrero" "marzo" "abril" "mayo" "junio" "julio" "agosto" "septiembre" "octubre" "noviembre" "diciembre")
-            MES="${NOMBRES[$MES_SIG]}"
-          fi
-          echo "mes=$MES" >> $GITHUB_OUTPUT
-          echo "anyo=$ANYO" >> $GITHUB_OUTPUT
-          echo "ejecutar=true" >> $GITHUB_OUTPUT
-          MES_CAP=$(echo "$MES" | sed 's/^./\u&/')
-          echo "mes_cap=$MES_CAP" >> $GITHUB_OUTPUT
-
-      - name: Generar plan mensual
-        if: steps.vars.outputs.ejecutar == 'true'
-        run: |
-          MES="${{ steps.vars.outputs.mes }}"
-          ANYO="${{ steps.vars.outputs.anyo }}"
-          ARCHIVO="planes/${MES}_${ANYO}.md"
-          mkdir -p planes
-
-          python3 - <<PYEOF
-          mes = "$MES"
-          anyo = "$ANYO"
-          mes_cap = mes.capitalize()
-          archivo = f"planes/{mes}_{anyo}.md"
-
-          contenido = f"""# Plan de Entrenamiento - {mes_cap} {anyo}
-
-> Generado automaticamente. Personaliza los objetivos segun tu estado de forma.
-
-## Objetivos del mes
-- [ ] Mantener base aerobica (ciclismo Z2)
-- [ ] Progresion en fuerza (sobrecarga progresiva)
-- [ ] Recuperacion activa: sauna 2x/semana
-- [ ] Registrar FC, RPE y HRV semanalmente
-
-## Distribucion semanal
-
-| Dia | Modalidad | Duracion | Intensidad | Zona FC |
-|-----|-----------|----------|------------|---------|
-| Lunes | Fuerza tren superior | 60 min | Moderada | - |
-| Martes | Ciclismo | 45 min | Baja | Z2 |
-| Miercoles | Eliptica + Core | 40 min | Moderada | Z2-Z3 |
-| Jueves | Fuerza tren inferior | 60 min | Alta | - |
-| Viernes | Ciclismo | 60 min | Moderada | Z2-Z3 |
-| Sabado | Actividad larga libre | 90 min | Baja | Z1-Z2 |
-| Domingo | Descanso / Sauna | - | Recuperacion | - |
-
-## Semana 1
-- [ ] Lunes - Fuerza superior
-- [ ] Martes - Ciclismo
-- [ ] Miercoles - Eliptica
-- [ ] Jueves - Fuerza inferior
-- [ ] Viernes - Ciclismo
-- [ ] Sabado - Actividad libre
-
-## Semana 2
-- [ ] Lunes - Fuerza superior
-- [ ] Martes - Ciclismo
-- [ ] Miercoles - Eliptica
-- [ ] Jueves - Fuerza inferior
-- [ ] Viernes - Ciclismo
-- [ ] Sabado - Actividad libre
-
-## Semana 3
-- [ ] Lunes - Fuerza superior
-- [ ] Martes - Ciclismo
-- [ ] Miercoles - Eliptica
-- [ ] Jueves - Fuerza inferior
-- [ ] Viernes - Ciclismo
-- [ ] Sabado - Actividad libre
-
-## Semana 4
-- [ ] Lunes - Fuerza superior
-- [ ] Martes - Ciclismo
-- [ ] Miercoles - Eliptica
-- [ ] Jueves - Fuerza inferior
-- [ ] Viernes - Ciclismo
-- [ ] Sabado - Actividad libre
-
-## Metricas objetivo
-
-| Metrica | Objetivo | Real (fin de mes) |
-|---------|----------|-------------------|
-| Sesiones completadas | >= 20/24 | - |
-| FC media ciclismo | < 145 bpm | - |
-| RPE medio | 5-6/10 | - |
-| HRV | Estable o subiendo | - |
-
-## Notas del mes
-> Anota aqui ajustes, lesiones, viajes o congresos.
-"""
-
-          with open(archivo, 'w', encoding='utf-8') as f:
-              f.write(contenido)
-          print(f"Archivo creado: {archivo}")
-          PYEOF
-
-      - name: Crear CSV de metricas
-        if: steps.vars.outputs.ejecutar == 'true'
-        run: |
-          MES="${{ steps.vars.outputs.mes }}"
-          ANYO="${{ steps.vars.outputs.anyo }}"
-          CSV="metricas/metricas_${MES}_${ANYO}.csv"
-          mkdir -p metricas
-          if [ ! -f "$CSV" ]; then
-            echo "fecha,modalidad,duracion_min,fc_media,fc_max,rpe,hrv,notas" > "$CSV"
-          fi
+      - name: Ejecutar script generador
+        run: python3 .github/scripts/generar_plan.py ${{ github.event.inputs.mes }} ${{ github.event.inputs.anyo }}
 
       - name: Commit y push
-        if: steps.vars.outputs.ejecutar == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add planes/ metricas/
-          git diff --staged --quiet || git commit -m "Auto: Plan ${{ steps.vars.outputs.mes }} ${{ steps.vars.outputs.anyo }}"
+          git diff --staged --quiet || git commit -m "Auto: Plan ${{ github.event.inputs.mes }} ${{ github.event.inputs.anyo }}"
           git push
 
-      - name: Crear issue de aviso
-        if: steps.vars.outputs.ejecutar == 'true'
+      - name: Crear issue
         uses: actions/github-script@v7
         with:
           script: |
-            const mes = "${{ steps.vars.outputs.mes_cap }}";
-            const anyo = "${{ steps.vars.outputs.anyo }}";
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `Nuevo plan listo: ${mes} ${anyo}`,
-              body: `## Plan de entrenamiento ${mes} ${anyo} generado automaticamente\n\n### Checklist de inicio de mes\n- [ ] Revisar y personalizar objetivos\n- [ ] Ajustar distribucion semanal\n- [ ] Verificar estado de forma (HRV, fatiga acumulada)\n- [ ] Planificar semana de descarga si necesario\n\n### Recuerda registrar en el CSV de metricas tras cada sesion`
-            });
+              title: 'Nuevo plan listo: ${{ github.event.inputs.mes }} ${{ github.event.inputs.anyo }}',
+              body: '## Plan generado\n\n- [ ] Revisar objetivos\n- [ ] Ajustar distribucion semanal\n- [ ] Verificar HRV y fatiga\n- [ ] Planificar semana de descarga si necesario'
+            })
