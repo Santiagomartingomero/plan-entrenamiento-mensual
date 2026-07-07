@@ -1,0 +1,213 @@
+name: 📅 Generación Automática Plan Mensual
+
+on:
+  schedule:
+    # El último día de cada mes a las 20:00 UTC (22:00 hora Canarias en verano)
+    - cron: '0 20 28-31 * *'
+  workflow_dispatch:
+    inputs:
+      mes:
+        description: 'Mes a generar (ej: agosto)'
+        required: false
+        default: ''
+      anyo:
+        description: 'Año (ej: 2026)'
+        required: false
+        default: ''
+
+jobs:
+  verificar-ultimo-dia:
+    runs-on: ubuntu-latest
+    outputs:
+      es_ultimo_dia: ${{ steps.check.outputs.es_ultimo_dia }}
+      mes_siguiente: ${{ steps.check.outputs.mes_siguiente }}
+      anyo_siguiente: ${{ steps.check.outputs.anyo_siguiente }}
+      mes_nombre: ${{ steps.check.outputs.mes_nombre }}
+    steps:
+      - name: Verificar si es el último día del mes
+        id: check
+        run: |
+          # Si se ejecuta manualmente con parámetros, usar esos
+          if [ -n "${{ github.event.inputs.mes }}" ]; then
+            echo "es_ultimo_dia=true" >> $GITHUB_OUTPUT
+            echo "mes_nombre=${{ github.event.inputs.mes }}" >> $GITHUB_OUTPUT
+            echo "anyo_siguiente=${{ github.event.inputs.anyo }}" >> $GITHUB_OUTPUT
+            echo "mes_siguiente=manual" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Calcular si hoy es el último día del mes
+          HOY=$(date +%d)
+          ULTIMO=$(cal | awk 'NF{f=$NF}END{print f}')
+          
+          if [ "$HOY" = "$ULTIMO" ]; then
+            echo "es_ultimo_dia=true" >> $GITHUB_OUTPUT
+          else
+            echo "es_ultimo_dia=false" >> $GITHUB_OUTPUT
+          fi
+
+          # Calcular el mes siguiente
+          MES_ACTUAL=$(date +%-m)
+          ANYO_ACTUAL=$(date +%Y)
+          
+          if [ "$MES_ACTUAL" = "12" ]; then
+            MES_SIG=1
+            ANYO_SIG=$((ANYO_ACTUAL + 1))
+          else
+            MES_SIG=$((MES_ACTUAL + 1))
+            ANYO_SIG=$ANYO_ACTUAL
+          fi
+          
+          echo "mes_siguiente=$MES_SIG" >> $GITHUB_OUTPUT
+          echo "anyo_siguiente=$ANYO_SIG" >> $GITHUB_OUTPUT
+
+          # Nombre del mes en español
+          NOMBRES=("" "enero" "febrero" "marzo" "abril" "mayo" "junio" "julio" "agosto" "septiembre" "octubre" "noviembre" "diciembre")
+          echo "mes_nombre=${NOMBRES[$MES_SIG]}" >> $GITHUB_OUTPUT
+
+  generar-plan:
+    needs: verificar-ultimo-dia
+    if: needs.verificar-ultimo-dia.outputs.es_ultimo_dia == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Generar archivo de plan mensual
+        id: generar
+        run: |
+          MES="${{ needs.verificar-ultimo-dia.outputs.mes_nombre }}"
+          ANYO="${{ needs.verificar-ultimo-dia.outputs.anyo_siguiente }}"
+          ARCHIVO="planes/${MES}_${ANYO}.md"
+
+          # Calcular número de semanas del mes
+          NUM_MES=$(date -d "1 ${MES} ${ANYO}" +%-m 2>/dev/null || date -d "${ANYO}-${{ needs.verificar-ultimo-dia.outputs.mes_siguiente }}-01" +%-m)
+          DIAS_MES=$(cal ${{ needs.verificar-ultimo-dia.outputs.mes_siguiente }} ${ANYO} | awk 'NF{f=$NF}END{print f}')
+
+          cat > "$ARCHIVO" << EOF
+          # 📅 Plan de Entrenamiento — $(echo "$MES" | awk '{print toupper(substr($0,1,1)) substr($0,2)}') ${ANYO}
+
+          > 🤖 Generado automáticamente el $(date '+%d/%m/%Y'). Personaliza los objetivos y ajusta la distribución según tu estado de forma.
+
+          ## Objetivos del mes
+          - [ ] Mantener/aumentar base aeróbica (ciclismo Z2)
+          - [ ] Progresión en fuerza (sobrecarga progresiva +2.5%)
+          - [ ] Recuperación activa: sauna 2×/semana
+          - [ ] Registrar FC, RPE y HRV semanalmente
+
+          ## Distribución semanal
+
+          | Día | Modalidad | Duración | Intensidad | Zona FC |
+          |-----|-----------|----------|------------|---------|
+          | Lunes | Fuerza (tren superior) | 60 min | Moderada | — |
+          | Martes | Ciclismo | 45 min | Baja | Z2 |
+          | Miércoles | Elíptica + Core | 40 min | Moderada | Z2-Z3 |
+          | Jueves | Fuerza (tren inferior) | 60 min | Alta | — |
+          | Viernes | Ciclismo | 60 min | Moderada | Z2-Z3 |
+          | Sábado | Actividad larga libre | 90 min | Baja | Z1-Z2 |
+          | Domingo | Descanso / Sauna | — | Recuperación | — |
+
+          ## Registro semanal
+
+          ### Semana 1
+          - [ ] Lunes — Fuerza superior
+          - [ ] Martes — Ciclismo
+          - [ ] Miércoles — Elíptica
+          - [ ] Jueves — Fuerza inferior
+          - [ ] Viernes — Ciclismo
+          - [ ] Sábado — Actividad libre
+
+          ### Semana 2
+          - [ ] Lunes — Fuerza superior
+          - [ ] Martes — Ciclismo
+          - [ ] Miércoles — Elíptica
+          - [ ] Jueves — Fuerza inferior
+          - [ ] Viernes — Ciclismo
+          - [ ] Sábado — Actividad libre
+
+          ### Semana 3
+          - [ ] Lunes — Fuerza superior
+          - [ ] Martes — Ciclismo
+          - [ ] Miércoles — Elíptica
+          - [ ] Jueves — Fuerza inferior
+          - [ ] Viernes — Ciclismo
+          - [ ] Sábado — Actividad libre
+
+          ### Semana 4
+          - [ ] Lunes — Fuerza superior
+          - [ ] Martes — Ciclismo
+          - [ ] Miércoles — Elíptica
+          - [ ] Jueves — Fuerza inferior
+          - [ ] Viernes — Ciclismo
+          - [ ] Sábado — Actividad libre
+
+          ## Métricas a registrar
+          > Actualiza el archivo \`metricas/metricas_${MES}_${ANYO}.csv\` tras cada sesión.
+
+          | Métrica | Objetivo del mes | Real (fin de mes) |
+          |---------|-----------------|-------------------|
+          | Sesiones completadas | ≥ 20/24 | — |
+          | FC media ciclismo | < 145 bpm | — |
+          | RPE medio | 5-6/10 | — |
+          | HRV (si disponible) | Estable o ↑ | — |
+
+          ## Notas del mes
+          > Añade aquí ajustes, lesiones, viajes, congresos u otras modificaciones al plan.
+
+          EOF
+
+          echo "archivo=$ARCHIVO" >> $GITHUB_OUTPUT
+          echo "mes_cap=$(echo "$MES" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')" >> $GITHUB_OUTPUT
+
+      - name: Crear CSV de métricas del mes
+        run: |
+          MES="${{ needs.verificar-ultimo-dia.outputs.mes_nombre }}"
+          ANYO="${{ needs.verificar-ultimo-dia.outputs.anyo_siguiente }}"
+          CSV="metricas/metricas_${MES}_${ANYO}.csv"
+          
+          if [ ! -f "$CSV" ]; then
+            echo "fecha,modalidad,duracion_min,fc_media,fc_max,rpe,hrv,notas" > "$CSV"
+            echo "CSV creado: $CSV"
+          else
+            echo "El CSV ya existe, no se sobreescribe."
+          fi
+
+      - name: Commit y push del nuevo plan
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add planes/ metricas/
+          git diff --staged --quiet || git commit -m "🤖 Auto: Plan de entrenamiento ${{ steps.generar.outputs.mes_cap }} ${{ needs.verificar-ultimo-dia.outputs.anyo_siguiente }}"
+          git push
+
+      - name: Crear issue de inicio de mes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const mes = "${{ steps.generar.outputs.mes_cap }}";
+            const anyo = "${{ needs.verificar-ultimo-dia.outputs.anyo_siguiente }}";
+            const archivo = "${{ steps.generar.outputs.archivo }}";
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🏋️ Nuevo plan listo: ${mes} ${anyo}`,
+              body: `## Plan de entrenamiento ${mes} ${anyo} generado automáticamente ✅
+
+### Acciones para comenzar el mes
+- [ ] Revisar y personalizar objetivos en \`${archivo}\`
+- [ ] Ajustar distribución semanal según disponibilidad
+- [ ] Verificar estado de forma (HRV, fatiga acumulada)
+- [ ] Planificar semana de descarga si es necesario
+
+### Recuerda registrar
+- 📊 Métricas de cada sesión en \`metricas/metricas_${mes.toLowerCase()}_${anyo}.csv\`
+- 📝 Notas y sensaciones en la sección correspondiente del plan
+
+> Generado automáticamente el ${new Date().toLocaleDateString('es-ES')} por GitHub Actions 🤖`,
+              labels: []
+            });
