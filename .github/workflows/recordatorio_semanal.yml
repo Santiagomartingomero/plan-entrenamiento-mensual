@@ -1,34 +1,41 @@
-name: 📋 Recordatorio Semanal de Entrenamiento
+name: Recordatorio Semanal de Entrenamiento
 
 on:
   schedule:
-    # Cada lunes a las 7:00 AM UTC (9:00 AM hora Canarias en verano)
-    - cron: '0 7 * * 1'
-  workflow_dispatch: # Permite ejecución manual
+    # Cada lunes a las 6:00 AM UTC
+    # Verano (WEST = UTC+1): 7:00 AM · Invierno (WET = UTC+0): 6:00 AM
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
 
 jobs:
   recordatorio:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Generar resumen semanal
-        run: |
-          SEMANA=$(date +"%Y-W%V")
-          echo "## 🏋️ Recordatorio — Semana $SEMANA" >> resumen_semana.md
-          echo "Actualiza tu registro en registros/ y revisa el plan del mes en planes/" >> resumen_semana.md
-          echo "Fecha de generación: $(date)" >> resumen_semana.md
 
       - name: Crear issue de seguimiento semanal
         uses: actions/github-script@v7
         with:
           script: |
-            const semana = new Date().toLocaleDateString('es-ES', { year: 'numeric', week: 'numeric' });
+            const hoy = new Date();
+            const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Atlantic/Canary' };
+            const fechaStr = hoy.toLocaleDateString('es-ES', opciones);
+
+            // Calcular semana del mes (1-4)
+            const diaMes = hoy.getDate();
+            const semana = Math.min(Math.ceil(diaMes / 7), 4);
+            const esSemanaDescarga = semana === 4;
+
+            const alertaDescarga = esSemanaDescarga
+              ? '\n> ⚡ **SEMANA DE DESCARGA** — Reduce volumen -40% e intensidad -20%. La supercompensación ocurre ahora.\n'
+              : '';
+
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `🗓️ Seguimiento semana del ${new Date().toLocaleDateString('es-ES')}`,
-              body: `### Checklist semanal de entrenamiento\n\n- [ ] Actualizar registros de sesiones\n- [ ] Revisar métricas CSV\n- [ ] Ajustar plan si necesario\n- [ ] Valorar recuperación y HRV\n\n> Generado automáticamente cada lunes.`,
-              labels: []
+              title: `🗓️ Semana ${semana}/4 — ${fechaStr}`,
+              body: `### Checklist semanal\n${alertaDescarga}\n- [ ] Registrar sesiones completadas en \`registros/\`\n- [ ] Actualizar métricas CSV (FC, RPE, HRV)\n- [ ] Revisar HRV: si baja >10% respecto basal → reducir intensidad\n- [ ] Valorar recuperación subjetiva (1-10)\n- [ ] Ajustar plan si hay guardias, viajes o fatiga acumulada\n\n**Zona horaria:** Atlantic/Canary (Islas Canarias)\n\n> Generado automáticamente cada lunes.`
             });

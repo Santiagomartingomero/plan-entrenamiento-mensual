@@ -2,7 +2,8 @@ name: Plan Mensual Automatico
 
 on:
   schedule:
-    - cron: '0 20 28-31 * *'
+    # Último día del mes: se ejecuta el día 28 y comprueba si mañana es día 1
+    - cron: '0 19 28 * *'
   workflow_dispatch:
     inputs:
       mes:
@@ -10,7 +11,7 @@ on:
         required: true
         default: 'agosto'
       anyo:
-        description: 'Anyo (ej: 2026)'
+        description: 'Año (ej: 2026)'
         required: true
         default: '2026'
 
@@ -23,24 +24,56 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Comprobar si es realmente el último día del mes
+        id: check_last_day
+        run: |
+          HOY=$(date +%d)
+          MANANA=$(date -d "+1 day" +%d)
+          if [ "$MANANA" = "01" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "ejecutar=true" >> $GITHUB_OUTPUT
+          else
+            echo "ejecutar=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Calcular mes siguiente (si es schedule)
+        id: mes_siguiente
+        if: steps.check_last_day.outputs.ejecutar == 'true'
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            MES=$(date -d "+1 day" +"%B" | python3 -c "
+import sys
+meses = {'January':'enero','February':'febrero','March':'marzo','April':'abril','May':'mayo','June':'junio','July':'julio','August':'agosto','September':'septiembre','October':'octubre','November':'noviembre','December':'diciembre'}
+print(meses[sys.stdin.read().strip()])
+")
+            ANYO=$(date -d "+1 day" +"%Y")
+          else
+            MES="${{ github.event.inputs.mes }}"
+            ANYO="${{ github.event.inputs.anyo }}"
+          fi
+          echo "mes=$MES" >> $GITHUB_OUTPUT
+          echo "anyo=$ANYO" >> $GITHUB_OUTPUT
+
       - name: Ejecutar script generador
-        run: python3 .github/scripts/generar_plan.py ${{ github.event.inputs.mes }} ${{ github.event.inputs.anyo }}
+        if: steps.check_last_day.outputs.ejecutar == 'true'
+        run: python3 .github/scripts/generar_plan.py ${{ steps.mes_siguiente.outputs.mes }} ${{ steps.mes_siguiente.outputs.anyo }}
 
       - name: Commit y push
+        if: steps.check_last_day.outputs.ejecutar == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add planes/ metricas/
-          git diff --staged --quiet || git commit -m "Auto: Plan ${{ github.event.inputs.mes }} ${{ github.event.inputs.anyo }}"
+          git diff --staged --quiet || git commit -m "Auto: Plan ${{ steps.mes_siguiente.outputs.mes }} ${{ steps.mes_siguiente.outputs.anyo }}"
           git push
 
-      - name: Crear issue
+      - name: Crear issue de revisión
+        if: steps.check_last_day.outputs.ejecutar == 'true'
         uses: actions/github-script@v7
         with:
           script: |
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: 'Nuevo plan listo: ${{ github.event.inputs.mes }} ${{ github.event.inputs.anyo }}',
-              body: '## Plan generado\n\n- [ ] Revisar objetivos\n- [ ] Ajustar distribucion semanal\n- [ ] Verificar HRV y fatiga\n- [ ] Planificar semana de descarga si necesario'
+              title: `📅 Nuevo plan listo: ${{ steps.mes_siguiente.outputs.mes }} ${{ steps.mes_siguiente.outputs.anyo }}`,
+              body: `## Plan generado para ${{ steps.mes_siguiente.outputs.mes }} ${{ steps.mes_siguiente.outputs.anyo }}\n\n### Checklist de revisión\n- [ ] Revisar objetivos del mes\n- [ ] Ajustar distribución semanal según guardias/congresos\n- [ ] Verificar HRV y nivel de fatiga actual\n- [ ] Confirmar semana de descarga en semana 4\n- [ ] Actualizar métricas objetivo si procede\n\n> Plan generado automáticamente con periodización 80/20 + semana de descarga.`
             })
