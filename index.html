@@ -1,2 +1,209 @@
 <!DOCTYPE html>
-<html lang="es": 
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🚴 Plan Entrenamiento — Julio 2026</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #2d3748; }
+    header { background: linear-gradient(135deg, #e67e22, #ca6f1e); color: white; padding: 30px 20px; text-align: center; }
+    header h1 { font-size: 1.8em; margin-bottom: 8px; }
+    header p { opacity: 0.85; font-size: 0.95em; }
+    main { max-width: 960px; margin: 30px auto; padding: 0 20px; }
+    .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+    .card h2 { color: #e67e22; font-size: 1.2em; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #fef3e2; }
+    .card h3 { font-size: 1em; color: #2d3748; margin: 18px 0 10px; padding: 8px 12px; border-radius: 8px; }
+    .push { background: #fef3e2; border-left: 4px solid #e67e22; }
+    .pull { background: #eaf3fb; border-left: 4px solid #2980b9; }
+    .legs { background: #e8f8f0; border-left: 4px solid #27ae60; }
+    .cardio { background: #f3e8ff; border-left: 4px solid #8e44ad; }
+    .rest { background: #f0f0f0; border-left: 4px solid #a0aec0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85em; margin-bottom: 6px; }
+    th { background: #f7f7f7; color: #4a5568; padding: 8px 10px; text-align: left; font-weight: 600; }
+    td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    .note { font-size: 0.78em; color: #718096; font-style: italic; }
+    .timing { font-size: 0.8em; color: #e67e22; font-weight: 600; margin-top: 6px; }
+    .week-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+    .week-tab { padding: 6px 16px; border-radius: 20px; font-size: 0.85em; font-weight: 600; cursor: default; }
+    .w1-tab { background: #eaf3fb; color: #2980b9; }
+    .w2-tab { background: #e8f8f0; color: #27ae60; }
+    .w3-tab { background: #fef3e2; color: #e67e22; }
+    .w4-tab { background: #fdecea; color: #c0392b; }
+    .goals li { font-size: 0.9em; padding: 7px 0; border-bottom: 1px solid #f0f0f0; list-style: none; }
+    .goals li::before { content: '○  '; color: #e67e22; }
+    .goals li:last-child { border-bottom: none; }
+    .context { background: #fffbf0; border: 1px solid #fde8c0; border-radius: 8px; padding: 12px 16px; font-size: 0.85em; color: #7d5a00; margin-bottom: 16px; line-height: 1.6; }
+    .prog-table td:first-child { font-weight: 600; color: #e67e22; }
+    footer { text-align: center; padding: 30px; font-size: 0.8em; color: #a0aec0; }
+    @media (max-width: 600px) { table { font-size: 0.78em; } }
+  </style>
+</head>
+<body>
+<header>
+  <h1>🚴 Plan de Entrenamiento — Julio 2026</h1>
+  <p>Rutina PPL · 2×/semana por grupo muscular · Basado en evidencia científica</p>
+  <p style="font-size:0.8em;margin-top:6px;">Dr. Santiago Martín Gomero · Las Palmas de Gran Canaria</p>
+</header>
+
+<main>
+
+  <!-- Contexto -->
+  <div class="card">
+    <h2>🎯 Objetivos y Contexto</h2>
+    <div class="context">
+      🚴 <strong>Ciclismo diario:</strong> 30 min ida + 30 min vuelta al trabajo (Z2, ~120–135 bpm). Cardio base integrado sin coste de tiempo extra.<br>
+      🏋️ <strong>Gimnasio:</strong> 45 min, 5 días/semana. Rutina PPL con 2× frecuencia por grupo muscular.<br>
+      🧖 <strong>Sauna:</strong> Sábado y domingo — recuperación parasimipática, reduce cortisol, mejora síntesis proteica.
+    </div>
+    <ul class="goals">
+      <li>Mantener base aeróbica con ciclismo diario Z2</li>
+      <li>Progresión en fuerza mediante sobrecarga progresiva (Schoenfeld 2019)</li>
+      <li>Volumen objetivo: 12–16 series por grupo muscular/semana</li>
+      <li>Recuperación activa con sauna ≥2×/semana</li>
+    </ul>
+  </div>
+
+  <!-- Distribución semanal -->
+  <div class="card">
+    <h2>🗓️ Distribución Semanal PPL</h2>
+    <table>
+      <tr><th>Día</th><th>Sesión</th><th>Grupos musculares</th></tr>
+      <tr><td>🟥 Lunes</td><td>PUSH 1</td><td>Pecho, hombro anterior, tríceps</td></tr>
+      <tr><td>🟦 Martes</td><td>PULL 1</td><td>Espalda, bíceps</td></tr>
+      <tr><td>🟩 Miércoles</td><td>LEGS 1</td><td>Cuádriceps, glúteos, gemelos</td></tr>
+      <tr><td>🟥 Jueves</td><td>PUSH 2</td><td>Pecho, hombro lateral, tríceps</td></tr>
+      <tr><td>🟦 Viernes</td><td>PULL 2</td><td>Espalda, bíceps, hombro posterior</td></tr>
+      <tr><td>⚪ Sábado</td><td>Descanso + Sauna</td><td>Recuperación activa</td></tr>
+      <tr><td>⚪ Domingo</td><td>Descanso + Sauna</td><td>Recuperación activa</td></tr>
+    </table>
+  </div>
+
+  <!-- LUNES PUSH 1 -->
+  <div class="card">
+    <h2>🟥 Lunes — PUSH 1 (Pecho + Hombro anterior + Tríceps)</h2>
+    <table>
+      <tr><th>Ejercicio</th><th>Series × Reps</th><th>Notas</th></tr>
+      <tr><td>Press banca con barra</td><td>4 × 6–8</td><td>Ejercicio principal. RIR 1–2</td></tr>
+      <tr><td>Press inclinado con mancuernas</td><td>3 × 8–10</td><td>Porción clavicular del pecho</td></tr>
+      <tr><td>Press militar con barra (de pie)</td><td>3 × 8–10</td><td>Hombro anterior y medio</td></tr>
+      <tr><td>Fondos en paralelas</td><td>3 × 10–12</td><td>Pecho inferior + tríceps</td></tr>
+      <tr><td>Extensión tríceps en polea (cuerda)</td><td>3 × 12–15</td><td>Aislamiento tríceps</td></tr>
+    </table>
+    <p class="timing">⏱ Tiempo estimado: 42–45 min · Descanso: 2–3 min compuestos · 60–90 s aislamiento</p>
+  </div>
+
+  <!-- MARTES PULL 1 -->
+  <div class="card">
+    <h2>🟦 Martes — PULL 1 (Espalda + Bíceps)</h2>
+    <table>
+      <tr><th>Ejercicio</th><th>Series × Reps</th><th>Notas</th></tr>
+      <tr><td>Dominadas o jalón al pecho</td><td>4 × 6–8</td><td>Principal espalda. Lastrar si puedes</td></tr>
+      <tr><td>Remo con barra (Pendlay)</td><td>3 × 8–10</td><td>Densidad espalda media y baja</td></tr>
+      <tr><td>Remo en polea baja (agarre neutro)</td><td>3 × 10–12</td><td>Espalda media</td></tr>
+      <tr><td>Curl con barra EZ</td><td>3 × 8–10</td><td>Bíceps principal</td></tr>
+      <tr><td>Curl martillo con mancuernas</td><td>3 × 10–12</td><td>Braquial + bíceps</td></tr>
+    </table>
+    <p class="timing">⏱ Tiempo estimado: 42–45 min</p>
+  </div>
+
+  <!-- MIERCOLES LEGS 1 -->
+  <div class="card">
+    <h2>🟩 Miércoles — LEGS 1 (Cuádriceps + Glúteos + Gemelos)</h2>
+    <table>
+      <tr><th>Ejercicio</th><th>Series × Reps</th><th>Notas</th></tr>
+      <tr><td>Sentadilla con barra trasera</td><td>4 × 6–8</td><td>Ejercicio rey. RIR 1–2</td></tr>
+      <tr><td>Prensa de piernas</td><td>3 × 10–12</td><td>Complemento cuádriceps</td></tr>
+      <tr><td>Extensión de cuádriceps en máquina</td><td>3 × 12–15</td><td>Aislamiento cuád</td></tr>
+      <tr><td>Hip thrust con barra</td><td>3 × 10–12</td><td>Glúteo máximo</td></tr>
+      <tr><td>Elevación de gemelos de pie</td><td>4 × 12–15</td><td>Gastrocnemio</td></tr>
+    </table>
+    <p class="timing">⏱ Tiempo estimado: 42–45 min</p>
+  </div>
+
+  <!-- JUEVES PUSH 2 -->
+  <div class="card">
+    <h2>🟥 Jueves — PUSH 2 (Pecho + Hombro lateral + Tríceps)</h2>
+    <table>
+      <tr><th>Ejercicio</th><th>Series × Reps</th><th>Notas</th></tr>
+      <tr><td>Press banca con mancuernas</td><td>4 × 8–10</td><td>Variante principal del lunes</td></tr>
+      <tr><td>Aperturas con mancuernas (inclinado)</td><td>3 × 12–15</td><td>Estiramiento pectoral</td></tr>
+      <tr><td>Elevaciones laterales con mancuernas</td><td>4 × 15–20</td><td>Hombro medio — clave para anchura</td></tr>
+      <tr><td>Press francés (skull crusher)</td><td>3 × 10–12</td><td>Cabeza larga tríceps</td></tr>
+      <tr><td>Kickbacks en polea</td><td>3 × 12–15</td><td>Contracción final tríceps</td></tr>
+    </table>
+    <p class="timing">⏱ Tiempo estimado: 42–45 min</p>
+  </div>
+
+  <!-- VIERNES PULL 2 -->
+  <div class="card">
+    <h2>🟦 Viernes — PULL 2 (Espalda + Bíceps + Hombro posterior)</h2>
+    <table>
+      <tr><th>Ejercicio</th><th>Series × Reps</th><th>Notas</th></tr>
+      <tr><td>Remo en máquina (Hammer) o polea alta</td><td>4 × 10–12</td><td>Espalda alta</td></tr>
+      <tr><td>Pull-over en polea</td><td>3 × 12–15</td><td>Serrato + dorsal</td></tr>
+      <tr><td>Face pull en polea (cuerda alta)</td><td>3 × 15–20</td><td>Hombro posterior + manguito rotador</td></tr>
+      <tr><td>Curl concentrado con mancuerna</td><td>3 × 10–12</td><td>Pico bíceps</td></tr>
+      <tr><td>Curl en banco inclinado</td><td>3 × 10–12</td><td>Estiramiento bíceps</td></tr>
+    </table>
+    <p class="timing">⏱ Tiempo estimado: 42–45 min</p>
+  </div>
+
+  <!-- Progresion -->
+  <div class="card">
+    <h2>📈 Progresion Semanal (Sobrecarga Progresiva)</h2>
+    <div class="week-tabs">
+      <span class="week-tab w1-tab">🔵 Semana 1 — Adaptación</span>
+      <span class="week-tab w2-tab">🟢 Semana 2 — Desarrollo</span>
+      <span class="week-tab w3-tab">🟠 Semana 3 — Pico</span>
+      <span class="week-tab w4-tab">🔴 Semana 4 — Descarga</span>
+    </div>
+    <table class="prog-table">
+      <tr><th>Semana</th><th>Carga</th><th>Volumen</th><th>RPE objetivo</th></tr>
+      <tr><td>1 — Adaptación</td><td>RIR 3 (3 reps en reserva)</td><td>Base</td><td>5–6/10</td></tr>
+      <tr><td>2 — Desarrollo</td><td>Misma carga + 1 rep por serie</td><td>+10%</td><td>6–7/10</td></tr>
+      <tr><td>3 — Pico</td><td>+2.5 kg compuestos / +1 kg aislamiento</td><td>+15%</td><td>7/10</td></tr>
+      <tr><td>4 — Descarga</td><td>Misma carga, 50% series</td><td>−40%</td><td>4–5/10</td></tr>
+    </table>
+  </div>
+
+  <!-- Volumen -->
+  <div class="card">
+    <h2>📊 Volumen Semanal por Grupo Muscular</h2>
+    <table>
+      <tr><th>Grupo muscular</th><th>Series/semana</th><th>Rango óptimo (evidencia)</th></tr>
+      <tr><td>Pecho</td><td>14</td><td>10–20</td></tr>
+      <tr><td>Espalda</td><td>14</td><td>10–20</td></tr>
+      <tr><td>Hombro</td><td>13</td><td>10–18</td></tr>
+      <tr><td>Tríceps</td><td>12</td><td>8–16</td></tr>
+      <tr><td>Bíceps</td><td>12</td><td>8–16</td></tr>
+      <tr><td>Cuádriceps</td><td>10</td><td>10–20</td></tr>
+      <tr><td>Glúteos</td><td>6</td><td>8–16</td></tr>
+      <tr><td>Gemelos</td><td>4</td><td>8–16</td></tr>
+    </table>
+  </div>
+
+  <!-- Nutricion -->
+  <div class="card">
+    <h2>🥑 Nutrición Basica para Hipertrofia</h2>
+    <table>
+      <tr><th>Parámetro</th><th>Recomendación</th><th>Referencia</th></tr>
+      <tr><td>Proteína</td><td>1.6–2.2 g/kg/día</td><td>Schoenfeld &amp; Aragon 2018</td></tr>
+      <tr><td>Distribución</td><td>3–4 tomas de 30–40 g</td><td>A lo largo del día</td></tr>
+      <tr><td>Post-entreno</td><td>Proteína + carbohidratos</td><td>En los 60 min posteriores</td></tr>
+      <tr><td>Hidratación</td><td>Mínimo 2.5 L/día</td><td>Mayor con ciclismo diario</td></tr>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  <p>Dr. Santiago Martín Gomero · Cardiología · Las Palmas de Gran Canaria</p>
+  <p style="margin-top:6px;">
+    <a href="https://github.com/Santiagomartingomero/plan-entrenamiento-mensual">📂 Repositorio</a> &nbsp;| 
+    <a href="planes/agosto_2026.md">📅 Plan Agosto</a>
+  </p>
+</footer>
+</body>
+</html>
