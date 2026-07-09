@@ -3,159 +3,136 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🚴 Plan Entrenamiento Mensual</title>
+  <title>🚴 Plan Entrenamiento — Julio 2026</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #2d3748; }
     header { background: linear-gradient(135deg, #e67e22, #ca6f1e); color: white; padding: 30px 20px; text-align: center; }
     header h1 { font-size: 1.8em; margin-bottom: 8px; }
     header p { opacity: 0.85; font-size: 0.95em; }
-    .stats { display: flex; justify-content: center; gap: 30px; background: white; padding: 20px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; }
-    .stat { text-align: center; }
-    .stat .num { font-size: 2em; font-weight: bold; color: #e67e22; }
-    .stat .label { font-size: 0.8em; color: #718096; }
     main { max-width: 900px; margin: 30px auto; padding: 0 20px; }
     .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
     .card h2 { color: #e67e22; font-size: 1.2em; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #fef3e2; }
     table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
     th { background: #fef3e2; color: #e67e22; padding: 10px; text-align: left; }
-    td { padding: 10px; border-bottom: 1px solid #f0f0f0; }
+    td { padding: 10px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
     tr:last-child td { border-bottom: none; }
-    .badge { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 0.78em; font-weight: 600; margin: 2px; }
-    .badge-orange { background: #fef3e2; color: #e67e22; }
-    .badge-green { background: #e8f8f0; color: #27ae60; }
-    .badge-red { background: #fdecea; color: #c0392b; }
-    .badge-blue { background: #eaf3fb; color: #2980b9; }
-    .week-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-    .week { border-radius: 10px; padding: 16px; }
-    .week-1 { background: #eaf3fb; border-left: 4px solid #2980b9; }
-    .week-2 { background: #e8f8f0; border-left: 4px solid #27ae60; }
-    .week-3 { background: #fef3e2; border-left: 4px solid #e67e22; }
-    .week-4 { background: #fdecea; border-left: 4px solid #c0392b; }
-    .week h3 { font-size: 1em; margin-bottom: 6px; }
-    .week p { font-size: 0.82em; color: #4a5568; line-height: 1.5; }
-    .ref { font-size: 0.78em; color: #718096; padding: 4px 0; border-bottom: 1px solid #f0f0f0; }
-    .ref:last-child { border-bottom: none; }
+    .week-block { margin-bottom: 20px; border-radius: 10px; overflow: hidden; }
+    .week-header { padding: 10px 16px; font-weight: bold; font-size: 0.95em; }
+    .w1 .week-header { background: #eaf3fb; color: #2980b9; }
+    .w2 .week-header { background: #e8f8f0; color: #27ae60; }
+    .w3 .week-header { background: #fef3e2; color: #e67e22; }
+    .w4 .week-header { background: #fdecea; color: #c0392b; }
+    .week-days { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 12px; background: #fafafa; border: 1px solid #f0f0f0; border-top: none; border-radius: 0 0 10px 10px; }
+    .day { background: white; border-radius: 8px; padding: 10px; border: 1px solid #e2e8f0; font-size: 0.82em; }
+    .day .day-name { font-weight: bold; color: #4a5568; margin-bottom: 4px; }
+    .day .activity { color: #2d3748; }
+    .day .duration { color: #a0aec0; font-size: 0.85em; }
+    .day .intensity { display: inline-block; margin-top: 4px; padding: 2px 7px; border-radius: 8px; font-size: 0.78em; font-weight: 600; }
+    .z2 { background: #e8f8f0; color: #27ae60; }
+    .mod { background: #fef3e2; color: #e67e22; }
+    .alta { background: #fdecea; color: #c0392b; }
+    .rec { background: #eaf3fb; color: #2980b9; }
+    .goals li { font-size: 0.9em; padding: 6px 0; border-bottom: 1px solid #f0f0f0; list-style: none; }
+    .goals li:before { content: '○  '; color: #e67e22; }
+    .goals li:last-child { border-bottom: none; }
     footer { text-align: center; padding: 30px; font-size: 0.8em; color: #a0aec0; }
-    @media (max-width: 600px) { .week-grid { grid-template-columns: 1fr; } .stats { gap: 16px; } }
+    @media (max-width: 600px) { .week-days { grid-template-columns: repeat(2, 1fr); } }
   </style>
 </head>
 <body>
   <header>
-    <h1>🚴 Plan de Entrenamiento Mensual</h1>
-    <p>Periodización científica basada en evidencia · Ciclismo, Fuerza y Cardio</p>
+    <h1>🚴 Plan de Entrenamiento</h1>
+    <p>Julio 2026 · Periodización 80/20 basada en evidencia</p>
     <p style="font-size:0.8em; margin-top:6px;">Dr. Santiago Martín Gomero</p>
   </header>
 
-  <div class="stats">
-    <div class="stat"><div class="num">4</div><div class="label">Semanas / ciclo</div></div>
-    <div class="stat"><div class="num">80/20</div><div class="label">Modelo intensidad</div></div>
-    <div class="stat"><div class="num">4</div><div class="label">Modalidades</div></div>
-    <div class="stat"><div class="num">€0</div><div class="label">Coste mensual</div></div>
-  </div>
-
   <main>
 
-    <!-- Periodización -->
+    <!-- Objetivos -->
     <div class="card">
-      <h2>📅 Modelo de Periodización — Ciclo 4 Semanas</h2>
-      <div class="week-grid">
-        <div class="week week-1">
-          <h3>Semana 1 — Adaptación</h3>
-          <p>Volumen base · RPE <strong>5–6/10</strong><br>Objetivo: activar sistemas sin fatiga acumulada</p>
-        </div>
-        <div class="week week-2">
-          <h3>Semana 2 — Desarrollo</h3>
-          <p>Volumen +10% · RPE <strong>6–7/10</strong><br>Objetivo: carga progresiva controlada</p>
-        </div>
-        <div class="week week-3">
-          <h3>Semana 3 — Pico</h3>
-          <p>Volumen +15% · RPE <strong>7/10</strong><br>Objetivo: máximo estímulo de entrenamiento</p>
-        </div>
-        <div class="week week-4">
-          <h3>Semana 4 — Descarga 🔴</h3>
-          <p>Volumen <strong>−40%</strong> · RPE <strong>4–5/10</strong><br>Objetivo: supercompensación y recuperación</p>
+      <h2>🎯 Objetivos de Julio</h2>
+      <ul class="goals">
+        <li>Mantener base aeróbica (ciclismo)</li>
+        <li>Progresión en fuerza con sobrecarga progresiva</li>
+        <li>Recuperación activa con sauna ≥2×/semana</li>
+      </ul>
+    </div>
+
+    <!-- Distribución semanal -->
+    <div class="card">
+      <h2>🗓️ Distribución Semanal Tipo</h2>
+      <table>
+        <tr><th>Día</th><th>Modalidad</th><th>Duración</th><th>Intensidad</th></tr>
+        <tr><td>🟥 Lunes</td><td>💪 Fuerza — Tren superior</td><td>60 min</td><td>Moderada</td></tr>
+        <tr><td>🟧 Martes</td><td>🚴 Ciclismo</td><td>45 min</td><td>Z2</td></tr>
+        <tr><td>🟨 Miércoles</td><td>🏃 Elíptica + Core</td><td>40 min</td><td>Moderada</td></tr>
+        <tr><td>🟥 Jueves</td><td>💪 Fuerza — Tren inferior</td><td>60 min</td><td>Alta</td></tr>
+        <tr><td>🟧 Viernes</td><td>🚴 Ciclismo</td><td>60 min</td><td>Z2–Z3</td></tr>
+        <tr><td>🟩 Sábado</td><td>🌄 Actividad libre / Larga</td><td>90 min</td><td>Baja–Moderada</td></tr>
+        <tr><td>⚪ Domingo</td><td>🧖 Descanso / Sauna</td><td>—</td><td>Recuperación</td></tr>
+      </table>
+    </div>
+
+    <!-- Semanas -->
+    <div class="card">
+      <h2>📆 Semanas de Julio</h2>
+
+      <div class="week-block w1">
+        <div class="week-header">🔵 Semana 1 (1–7 Jul) — Adaptación · RPE 5–6</div>
+        <div class="week-days">
+          <div class="day"><div class="day-name">Lunes</div><div class="activity">💪 Fuerza superior</div><div class="duration">60 min</div><span class="intensity mod">Moderada</span></div>
+          <div class="day"><div class="day-name">Martes</div><div class="activity">🚴 Ciclismo</div><div class="duration">45 min</div><span class="intensity z2">Z2</span></div>
+          <div class="day"><div class="day-name">Miércoles</div><div class="activity">🏃 Elíptica + Core</div><div class="duration">40 min</div><span class="intensity mod">Moderada</span></div>
+          <div class="day"><div class="day-name">Jueves</div><div class="activity">💪 Fuerza inferior</div><div class="duration">60 min</div><span class="intensity alta">Alta</span></div>
+          <div class="day"><div class="day-name">Viernes</div><div class="activity">🚴 Ciclismo</div><div class="duration">60 min</div><span class="intensity z2">Z2–Z3</span></div>
+          <div class="day"><div class="day-name">Sábado</div><div class="activity">🌄 Actividad larga</div><div class="duration">90 min</div><span class="intensity rec">Baja</span></div>
         </div>
       </div>
-    </div>
 
-    <!-- Modalidades -->
-    <div class="card">
-      <h2>🏋️ Modalidades de Entrenamiento</h2>
-      <table>
-        <tr><th>Modalidad</th><th>Descripción</th><th>Frecuencia</th></tr>
-        <tr>
-          <td>🚴 Ciclismo</td>
-          <td>Commute + entrenamiento estructurado por zonas FC</td>
-          <td><span class="badge badge-orange">3–4×/semana</span></td>
-        </tr>
-        <tr>
-          <td>💪 Fuerza / Gym</td>
-          <td>Tren superior e inferior con sobrecarga progresiva</td>
-          <td><span class="badge badge-green">2–3×/semana</span></td>
-        </tr>
-        <tr>
-          <td>🏃 Elíptica / Cardio</td>
-          <td>Cardio complementario de baja intensidad</td>
-          <td><span class="badge badge-blue">1–2×/semana</span></td>
-        </tr>
-        <tr>
-          <td>🧖 Sauna</td>
-          <td>Recuperación activa, reduce inflamación y mejora HRV</td>
-          <td><span class="badge badge-red">≥2×/semana</span></td>
-        </tr>
-      </table>
-    </div>
+      <div class="week-block w2">
+        <div class="week-header">🟢 Semana 2 (8–14 Jul) — Desarrollo · Volumen +10% · RPE 6–7</div>
+        <div class="week-days">
+          <div class="day"><div class="day-name">Lunes</div><div class="activity">💪 Fuerza superior</div><div class="duration">60 min</div><span class="intensity mod">Moderada</span></div>
+          <div class="day"><div class="day-name">Martes</div><div class="activity">🚴 Ciclismo</div><div class="duration">50 min</div><span class="intensity z2">Z2</span></div>
+          <div class="day"><div class="day-name">Miércoles</div><div class="activity">🏃 Elíptica + Core</div><div class="duration">44 min</div><span class="intensity mod">Moderada</span></div>
+          <div class="day"><div class="day-name">Jueves</div><div class="activity">💪 Fuerza inferior</div><div class="duration">60 min</div><span class="intensity alta">Alta</span></div>
+          <div class="day"><div class="day-name">Viernes</div><div class="activity">🚴 Ciclismo</div><div class="duration">66 min</div><span class="intensity z2">Z2–Z3</span></div>
+          <div class="day"><div class="day-name">Sábado</div><div class="activity">🌄 Actividad larga</div><div class="duration">99 min</div><span class="intensity rec">Baja</span></div>
+        </div>
+      </div>
 
-    <!-- Métricas -->
-    <div class="card">
-      <h2>📊 Métricas Registradas por Sesión</h2>
-      <table>
-        <tr><th>Campo</th><th>Descripción</th></tr>
-        <tr><td>📅 Fecha</td><td>Día de la sesión</td></tr>
-        <tr><td>🗓️ Semana del ciclo</td><td>1, 2, 3 o 4 (descarga)</td></tr>
-        <tr><td>🏃 Modalidad</td><td>Ciclismo, fuerza, elíptica, sauna</td></tr>
-        <tr><td>⏱️ Duración (min)</td><td>Tiempo total de sesión</td></tr>
-        <tr><td>❤️ FC media / máx</td><td>Frecuencia cardíaca durante el ejercicio</td></tr>
-        <tr><td>💢 RPE</td><td>Percepción de esfuerzo (escala 1–10)</td></tr>
-        <tr><td>🫀 HRV</td><td>Variabilidad de FC basal — si cae >10% reducir intensidad</td></tr>
-        <tr><td>✅ Completada</td><td>Sesión realizada sí/no</td></tr>
-        <tr><td>📝 Notas</td><td>Observaciones de la sesión</td></tr>
-      </table>
-    </div>
+      <div class="week-block w3">
+        <div class="week-header">🟠 Semana 3 (15–21 Jul) — Pico · Volumen +15% · RPE 7</div>
+        <div class="week-days">
+          <div class="day"><div class="day-name">Lunes</div><div class="activity">💪 Fuerza superior</div><div class="duration">65 min</div><span class="intensity alta">Alta</span></div>
+          <div class="day"><div class="day-name">Martes</div><div class="activity">🚴 Ciclismo</div><div class="duration">52 min</div><span class="intensity z2">Z2–Z3</span></div>
+          <div class="day"><div class="day-name">Miércoles</div><div class="activity">🏃 Elíptica + Core</div><div class="duration">46 min</div><span class="intensity mod">Moderada</span></div>
+          <div class="day"><div class="day-name">Jueves</div><div class="activity">💪 Fuerza inferior</div><div class="duration">65 min</div><span class="intensity alta">Alta</span></div>
+          <div class="day"><div class="day-name">Viernes</div><div class="activity">🚴 Ciclismo</div><div class="duration">69 min</div><span class="intensity alta">Z3</span></div>
+          <div class="day"><div class="day-name">Sábado</div><div class="activity">🌄 Actividad larga</div><div class="duration">104 min</div><span class="intensity rec">Baja</span></div>
+        </div>
+      </div>
 
-    <!-- Automatizaciones -->
-    <div class="card">
-      <h2>⚙️ Automatizaciones Activas</h2>
-      <table>
-        <tr><th>Workflow</th><th>Cuándo</th><th>Acción</th></tr>
-        <tr>
-          <td>🔔 Recordatorio semanal</td>
-          <td>Lunes 6:00 UTC (8:00 Canarias)</td>
-          <td>Issue con checklist semanal + alerta semana de descarga</td>
-        </tr>
-        <tr>
-          <td>📋 Plan mensual</td>
-          <td>Último día del mes 19:00 UTC</td>
-          <td>Genera plan del mes siguiente + issue de revisión</td>
-        </tr>
-      </table>
-    </div>
+      <div class="week-block w4">
+        <div class="week-header">🔴 Semana 4 (22–28 Jul) — Descarga · Volumen −40% · RPE 4–5</div>
+        <div class="week-days">
+          <div class="day"><div class="day-name">Lunes</div><div class="activity">💪 Fuerza superior</div><div class="duration">36 min</div><span class="intensity rec">Suave</span></div>
+          <div class="day"><div class="day-name">Martes</div><div class="activity">🚴 Ciclismo</div><div class="duration">27 min</div><span class="intensity z2">Z2</span></div>
+          <div class="day"><div class="day-name">Miércoles</div><div class="activity">🏃 Elíptica</div><div class="duration">24 min</div><span class="intensity rec">Suave</span></div>
+          <div class="day"><div class="day-name">Jueves</div><div class="activity">💪 Fuerza inferior</div><div class="duration">36 min</div><span class="intensity rec">Suave</span></div>
+          <div class="day"><div class="day-name">Viernes</div><div class="activity">🚴 Ciclismo</div><div class="duration">36 min</div><span class="intensity z2">Z2</span></div>
+          <div class="day"><div class="day-name">Sábado</div><div class="activity">🌄 Paseo / Sauna</div><div class="duration">54 min</div><span class="intensity rec">Recuperación</span></div>
+        </div>
+      </div>
 
-    <!-- Referencias -->
-    <div class="card">
-      <h2>📚 Referencias Científicas</h2>
-      <div class="ref">Seiler S. (2010). <em>What is best practice for training intensity distribution?</em> Int J Sports Physiol Perform.</div>
-      <div class="ref">ACSM Position Stand (2022). <em>Resistance training progression and prescription.</em></div>
-      <div class="ref">Issurin V. (2010). <em>New horizons for training periodization.</em> Sports Med.</div>
-      <div class="ref">Buchheit M. & Laursen P. (2013). <em>High-intensity interval training.</em> Sports Med.</div>
     </div>
 
   </main>
 
   <footer>
     <p>Dr. Santiago Martín Gomero · Cardiología · Las Palmas de Gran Canaria</p>
-    <p style="margin-top:6px;"><a href="https://github.com/Santiagomartingomero/plan-entrenamiento-mensual">📂 Ver repositorio</a></p>
+    <p style="margin-top:6px;"><a href="https://github.com/Santiagomartingomero/plan-entrenamiento-mensual">📂 Ver repositorio</a> &nbsp;|&nbsp; <a href="planes/agosto_2026.md">📅 Plan Agosto</a></p>
   </footer>
 </body>
 </html>
